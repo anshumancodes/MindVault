@@ -8,6 +8,7 @@ export interface User extends Document {
   email: string;
   avatar: string;
   accessToken: string;
+  comparePassword: (password: string) => Promise<boolean>;
 }
 
 const userSchema = new Schema<User>({
