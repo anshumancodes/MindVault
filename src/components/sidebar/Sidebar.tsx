@@ -1,6 +1,7 @@
 import { ChevronDown, LogOut, Settings, ArrowUpCircle } from "lucide-react";
-
+import { useUserModal } from "@/context/Content.store";
 export default function Sidebar() {
+  const { openModal } = useUserModal();
   return (
     <div className="flex flex-col py-6 px-8 max-w-[300px] border-r border-gray-600 h-screen">
       {/* Top Branding */}
@@ -32,33 +33,24 @@ export default function Sidebar() {
       </div>
 
       {/* Push profile section to bottom */}
-      <div className="mt-auto border-t border-gray-600 flex gap-2 items-center py-4">
-        <div className="bg-[#f5f5f5] text-[#191516] px-2 py-2 rounded-full">
-          <p>UN</p>
+      <div
+      onClick={openModal}
+      className="mt-auto border-t border-gray-700 px-4 py-3 flex items-center justify-between cursor-pointer hover:bg-gray-800 transition rounded-lg"
+    >
+      {/* Avatar + Info */}
+      <div className="flex items-center gap-3">
+        <div className="bg-gray-200 text-gray-800 font-medium px-3 py-2 rounded-full">
+          UN
         </div>
-        <span className="flex gap-1 items-center">
-          <p>Username</p>
-          <ChevronDown className="w-4 h-4" />
-        </span>
+        <div className="flex flex-col leading-tight">
+          <p className="text-sm font-medium text-white">Username</p>
+          <p className="text-xs text-gray-400">anshumanprof01@gmail.com</p>
+        </div>
       </div>
-    </div>
-  );
-}
 
-function ProfileModal() {
-  return (
-    <div className="p-4 bg-white shadow-lg rounded-md w-48">
-      <p className="text-sm text-gray-500 mb-2">username@email.com</p>
-      <button className="flex items-center gap-2 text-sm hover:bg-gray-100 p-2 rounded-md w-full">
-        <ArrowUpCircle className="w-4 h-4" /> Upgrade plan
-      </button>
-      <button className="flex items-center gap-2 text-sm hover:bg-gray-100 p-2 rounded-md w-full">
-        <Settings className="w-4 h-4" /> Settings
-      </button>
-      <hr className="my-2 border-gray-300" />
-      <button className="flex items-center gap-2 text-sm hover:bg-gray-100 p-2 rounded-md w-full text-red-600">
-        <LogOut className="w-4 h-4" /> Logout
-      </button>
+      {/* Dropdown Icon */}
+      <ChevronDown className="w-4 h-4 text-gray-400" />
+    </div>
     </div>
   );
 }
