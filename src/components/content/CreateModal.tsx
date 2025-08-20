@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import {
   Dialog,
@@ -39,22 +40,22 @@ export default function CreateModal() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form Data:", formData);
-    closeModal(); // close after submit
+    closeModal(); 
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={closeModal}>
-      <DialogContent className="sm:max-w-lg rounded-2xl shadow-xl border border-gray-200 bg-white/90 backdrop-blur-lg p-6">
+      <DialogContent className="sm:max-w-lg rounded-2xl shadow-xl border border-zinc-700 bg-zinc-900 text-gray-200 p-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 10 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ duration: 0.2, ease: "easeOut" }}
         >
           <DialogHeader>
-            <DialogTitle className="text-xl font-semibold text-gray-900">
+            <DialogTitle className="text-xl font-semibold text-gray-100">
               Add New Content
             </DialogTitle>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-400">
               Fill in the details to save content to your vault.
             </p>
           </DialogHeader>
@@ -62,7 +63,7 @@ export default function CreateModal() {
           <form onSubmit={handleSubmit} className="space-y-5 mt-4">
             {/* Link */}
             <div className="space-y-1">
-              <Label htmlFor="link" className="text-gray-700">
+              <Label htmlFor="link" className="text-gray-300">
                 Link
               </Label>
               <Input
@@ -71,13 +72,13 @@ export default function CreateModal() {
                 value={formData.link}
                 onChange={(e) => handleChange("link", e.target.value)}
                 required
-                className="focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                className="bg-zinc-800 border-zinc-700 text-gray-200 placeholder:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
             {/* Title */}
             <div className="space-y-1">
-              <Label htmlFor="title" className="text-gray-700">
+              <Label htmlFor="title" className="text-gray-300">
                 Title
               </Label>
               <Input
@@ -86,59 +87,52 @@ export default function CreateModal() {
                 value={formData.title}
                 onChange={(e) => handleChange("title", e.target.value)}
                 required
-                className="focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                className="bg-zinc-800 border-zinc-700 text-gray-200 placeholder:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
-            {/* Type */}
+            {/* cotent Type */}
             <div className="space-y-1">
-              <Label className="text-gray-700">Type</Label>
+              <Label className="text-gray-300">Type</Label>
               <Select
                 value={formData.type}
                 onValueChange={(value) => handleChange("type", value)}
                 required
               >
-                <SelectTrigger className="focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                  <SelectValue
-                    placeholder="Select type"
-                    className="text-gray-700"
-                  />
+                <SelectTrigger className="bg-zinc-800 border-zinc-700 text-gray-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500">
+                  <SelectValue placeholder="Select type" />
                 </SelectTrigger>
-                <SelectContent className="text-gray-700">
-                  <SelectItem value="docs" className="">
-                    <p className="text-gray-700">Docs</p>
-                  </SelectItem>
-                  <SelectItem value="tweets">
-                    <p className="text-gray-700">Tweets</p>
-                  </SelectItem>
-                  <SelectItem value="videos">
-                    <p className="text-gray-700">Videos</p>
-                  </SelectItem>
+                <SelectContent className="bg-zinc-800 border-zinc-700 text-gray-200">
+                  <SelectItem value="docs">Docs</SelectItem>
+                  <SelectItem value="tweets">Tweets</SelectItem>
+                  <SelectItem value="videos">Videos</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+
+            
             <div>
               {formData.type === "docs" && (
                 <div className="space-y-1">
-                  <Label htmlFor="docContent" className="text-gray-700">
+                  <Label htmlFor="docContent" className="text-gray-300">
                     Document Content
                   </Label>
                   <textarea
                     id="docContent"
                     placeholder="Write or paste your document..."
                     maxLength={250}
-                    className="w-full min-h-[120px] rounded-md border border-gray-300 
-                 p-3 text-sm text-gray-700 
-                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 
-                 placeholder:text-gray-400 resize-y"
+                    className="w-full min-h-[120px] rounded-md border border-zinc-700 bg-zinc-800 
+                      p-3 text-sm text-gray-200 placeholder:text-gray-500
+                      focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"
                     onChange={(e) => handleChange("content", e.target.value)}
                   />
                 </div>
               )}
             </div>
-            {/* Tags */}
+
+            {/* Tags selection  */}
             <div className="space-y-1">
-              <Label htmlFor="tags" className="text-gray-700">
+              <Label htmlFor="tags" className="text-gray-300">
                 Tags
               </Label>
               <Input
@@ -146,23 +140,23 @@ export default function CreateModal() {
                 placeholder="tag1, tag2, tag3"
                 value={formData.tags}
                 onChange={(e) => handleChange("tags", e.target.value)}
-                className="focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-700"
+                className="bg-zinc-800 border-zinc-700 text-gray-200 placeholder:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
 
-            {/* Footer */}
+             
             <DialogFooter className="flex justify-end gap-3 pt-4">
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl text-gray-700 border-gray-300 hover:bg-gray-100"
+                className="rounded-xl border-zinc-700 text-gray-300 hover:bg-zinc-800"
                 onClick={closeModal}
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
-                className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-md"
+                className="rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white shadow-md"
               >
                 Save
               </Button>
