@@ -22,3 +22,15 @@ export const useUserModal= create<OpenUserModalState>((set) => ({
   openModal: () => set({ isOpen: true }),
   closeModal: () => set({ isOpen: false }),
 }));
+
+type OpenShareModalState = {
+  isOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
+};
+
+export const useShareModal= create<OpenShareModalState>((set) => ({
+  isOpen: false,
+  openModal: () => set({ isOpen: true }),
+  closeModal: () => set({ isOpen: false }),
+}));
