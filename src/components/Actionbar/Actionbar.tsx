@@ -8,10 +8,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useCreateContentModal } from "@/context/Content.store";
+import { useCreateContentModal,useShareModal  } from "@/context/Content.store";
 
 export default function Actionbar() {
-  const openModal = useCreateContentModal((state) => state.openModal);
+  const openCreateModal = useCreateContentModal((state) => state.openModal);
+  const openShareModal = useShareModal((state) => state.openModal);
 
   return (
     <div className="flex flex-wrap justify-between items-center px-6 py-4 shadow-sm border-b border-gray-600 gap-3">
@@ -39,14 +40,16 @@ export default function Actionbar() {
       </div>
 
       <div className="flex gap-3">
-        <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition">
+        <button className="flex items-center gap-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition"
+        onClick={openShareModal} 
+        >
           <Share2 className="w-4 h-4" />
           Share Brain
         </button>
 
         <button
           className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-          onClick={openModal}
+          onClick={openCreateModal}
         >
           <Plus className="w-4 h-4" />
           Add Content
