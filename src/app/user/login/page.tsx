@@ -1,31 +1,40 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-
+import { signIn } from "next-auth/react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   async function loginAction(formData: FormData) {
-    "use server";
+    setLoading(true);
+    setError(null);
+
     const identifier = formData.get("email")?.toString();
     const password = formData.get("password")?.toString();
     if (!identifier || !password) return;
 
-    const res = await fetch("/api/v1/user/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: identifier,
-        username: identifier,
-        password,
-      }),
+   
+    const res = await signIn("credentials", {
+      redirect: false,
+      username: identifier, 
+      password,
+      callbackUrl: "/mind",
     });
 
-    if (res.ok) {
-      redirect("/dashboard");
+    setLoading(false);
+
+    if (res?.error) {
+      setError("Invalid credentials");
     } else {
-      console.error("Invalid credentials");
+      router.push("/mind");
     }
   }
 
@@ -72,7 +81,7 @@ export default function LoginPage() {
                 <Input
                   id="email"
                   name="email"
-                  type="email"
+                  type="text"
                   placeholder="Enter your email or username"
                   className="h-12 px-4 border-[#3057AC] focus:border-[#399E5A] focus:ring-[#399E5A] bg-transparent text-[#FFF8F0] placeholder-[#FFF8F0]/50"
                 />
@@ -100,12 +109,17 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {error && (
+              <p className="text-sm text-red-400 font-medium">{error}</p>
+            )}
+
             <div className="space-y-4">
               <Button
-                className="w-full h-12 bg-gradient-to-r from-[#3057AC] to-[#399E5A] hover:opacity-90 text-[#FFF8F0] font-medium rounded-lg transition-colors"
+                disabled={loading}
+                className="w-full h-12 bg-gradient-to-r bg-blue-800 hover:opacity-90 text-[#FFF8F0] font-medium rounded-lg transition-colors"
                 type="submit"
               >
-                Sign in to MindVault
+                {loading ? "Signing in..." : "Sign in to MindVault"}
               </Button>
 
               <div className="relative">
@@ -120,6 +134,7 @@ export default function LoginPage() {
               </div>
 
               <Button
+                onClick={() => signIn("google", { callbackUrl: "/mind" })}
                 variant="outline"
                 className="w-full h-12 text-[#191516] flex items-center justify-center gap-3 font-medium rounded-lg transition-colors"
                 type="button"
@@ -152,7 +167,7 @@ export default function LoginPage() {
             <p className="text-sm">
               Don&apos;t have an account?{" "}
               <Link
-                href="/signup"
+                href="/user/signup"
                 className="font-medium text-[#399E5A] hover:text-[#3057AC]"
               >
                 Create your vault
