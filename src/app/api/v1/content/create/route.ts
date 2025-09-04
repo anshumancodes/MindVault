@@ -1,8 +1,10 @@
 import ContentModel from "@/models/content";
 import { NextResponse, NextRequest } from "next/server";
 import contentSchema from "@/schemas/contentSchema";
+import connectDB from "@/lib/connectDB";
 
 export async function POST(req: NextRequest) {
+  await connectDB();
   try {
     const body = await req.json();
     const { link, description, title, type, tags } = body;
