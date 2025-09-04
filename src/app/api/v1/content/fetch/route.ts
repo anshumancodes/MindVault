@@ -2,29 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import ContentModel from "@/models/content";
 import connectDB from "@/lib/connectDB";
 
-export async function PATCH(req: NextRequest) {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const contentId = searchParams.get("contentId");
-
-  if (!contentId) {
-    return NextResponse.json(
-      { message: "contentId is required" },
-      { status: 400 }
-    );
-  }
-
   await connectDB();
 
   try {
-    const body = await req.json();
+    const fetchedContent = await ContentModel.findById(contentId);
 
-    const updatedContent = await ContentModel.findByIdAndUpdate(
-      contentId,
-      { $set: body },
-      { new: true, runValidators: true }
-    );
-
-    if (!updatedContent) {
+    if (!fetchedContent) {
       return NextResponse.json(
         { message: "Content doesn't exist!" },
         { status: 404 }
@@ -33,18 +19,20 @@ export async function PATCH(req: NextRequest) {
 
     return NextResponse.json(
       {
-        message: "Content updated successfully!",
-        data: updatedContent,
+        message: "Content fetched successfully!",
+        data: fetchedContent,
       },
       { status: 200 }
     );
   } catch (error) {
     return NextResponse.json(
       {
-        message: "Unexpected server error: couldn't update content!",
-        error,
+        message: "Unexpected server error: couldnt fetch content!",
+        error: error,
       },
-      { status: 500 }
+      {
+        status: 500,
+      }
     );
   }
 }
