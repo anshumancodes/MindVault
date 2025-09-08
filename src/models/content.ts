@@ -1,7 +1,8 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface Content extends Document {
-  link: string;
+  link?: string;
+  description?: string;
   type: string;
   title: string;
   tags: mongoose.Types.ObjectId[];
@@ -11,7 +12,9 @@ export interface Content extends Document {
 const ContentSchema = new Schema<Content>({
   link: {
     type: String,
-    required: true,
+  },
+  description: {
+    type: String,
   },
   type: {
     type: String,
@@ -21,11 +24,13 @@ const ContentSchema = new Schema<Content>({
     type: String,
     required: true,
   },
-  tags: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Tag",
-    required: true,
-  }],
+  tags: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Tag",
+      required: true,
+    },
+  ],
   owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
