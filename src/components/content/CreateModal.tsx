@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { useSession } from "next-auth/react";
 import {
   Select,
   SelectContent,
@@ -18,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateContentModal } from "@/context/Content.store";
+import { useCreateContentModal } from "@/context/Context.store";
 import { motion } from "framer-motion";
 
 export default function CreateModal() {
@@ -30,17 +31,53 @@ export default function CreateModal() {
     type: "",
     title: "",
     tags: "",
-    owner: "",
+    docContent: "",
   });
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Form Data:", formData);
-    closeModal(); 
+
+    try {
+      const tagsArray = formData.tags.split(",").map((tag) => tag.trim());
+
+      const payload = {
+        link: formData.link,
+        type: formData.type,
+        title: formData.title,
+        tags: tagsArray,
+        description: formData.docContent,
+      };
+
+      const response = await fetch("/api/v1/content/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        console.error("Error creating content:", result.message);
+        return;
+      }
+
+      console.log("Content created successfully:", result);
+      closeModal();
+
+      setFormData({
+        link: "",
+        type: "",
+        title: "",
+        tags: "",
+        docContent: "",
+      });
+    } catch (error) {
+      console.error("Unexpected error:", error);
+    }
   };
 
   return (
@@ -91,7 +128,7 @@ export default function CreateModal() {
               />
             </div>
 
-            {/* cotent Type */}
+            {/* Type */}
             <div className="space-y-1">
               <Label className="text-gray-300">Type</Label>
               <Select
@@ -110,27 +147,25 @@ export default function CreateModal() {
               </Select>
             </div>
 
-            
-            <div>
-              {formData.type === "docs" && (
-                <div className="space-y-1">
-                  <Label htmlFor="docContent" className="text-gray-300">
-                    Document Content
-                  </Label>
-                  <textarea
-                    id="docContent"
-                    placeholder="Write or paste your document..."
-                    maxLength={250}
-                    className="w-full min-h-[120px] rounded-md border border-zinc-700 bg-zinc-800 
-                      p-3 text-sm text-gray-200 placeholder:text-gray-500
-                      focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"
-                    onChange={(e) => handleChange("content", e.target.value)}
-                  />
-                </div>
-              )}
-            </div>
+            {formData.type === "docs" && (
+              <div className="space-y-1">
+                <Label htmlFor="docContent" className="text-gray-300">
+                  Document Content
+                </Label>
+                <textarea
+                  id="docContent"
+                  placeholder="Write or paste your document..."
+                  maxLength={250}
+                  value={formData.docContent}
+                  onChange={(e) => handleChange("docContent", e.target.value)}
+                  className="w-full min-h-[120px] rounded-md border border-zinc-700 bg-zinc-800 
+                    p-3 text-sm text-gray-200 placeholder:text-gray-500
+                    focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 resize-y"
+                />
+              </div>
+            )}
 
-            {/* Tags selection  */}
+            {/* Tags */}
             <div className="space-y-1">
               <Label htmlFor="tags" className="text-gray-300">
                 Tags
@@ -144,12 +179,11 @@ export default function CreateModal() {
               />
             </div>
 
-             
             <DialogFooter className="flex justify-end gap-3 pt-4">
               <Button
                 type="button"
                 variant="outline"
-                className="rounded-xl border-zinc-700 text-gray-300 hover:bg-zinc-800"
+                className="rounded-xl border-zinc-700 text-gray-300 bg-zinc-800"
                 onClick={closeModal}
               >
                 Cancel
