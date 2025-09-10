@@ -5,7 +5,7 @@ export interface Content extends Document {
   description?: string;
   type: string;
   title: string;
-  tags: mongoose.Types.ObjectId[];
+  tags?: mongoose.Types.ObjectId[];
   owner: mongoose.Types.ObjectId;
 }
 
@@ -28,7 +28,7 @@ const ContentSchema = new Schema<Content>({
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Tag",
-      required: true,
+     
     },
   ],
   owner: {
@@ -38,5 +38,5 @@ const ContentSchema = new Schema<Content>({
   },
 });
 
-const ContentModel = mongoose.model<Content>("Content", ContentSchema);
+const ContentModel =  mongoose.models.Content || mongoose.model<Content>("Content", ContentSchema);
 export default ContentModel;
