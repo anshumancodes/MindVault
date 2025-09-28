@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useCreateContentModal,useShareModal  } from "@/context/Content.store";
+import { useCreateContentModal,useShareModal  } from "@/context/Context.store";
 
 export default function Actionbar() {
   const openCreateModal = useCreateContentModal((state) => state.openModal);
