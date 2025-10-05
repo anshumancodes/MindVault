@@ -36,6 +36,8 @@ const ContentSchema = new Schema<Content>({
     ref: "User",
     required: true,
   },
+},{
+  timestamps:true
 });
 
 const ContentModel =  mongoose.models.Content || mongoose.model<Content>("Content", ContentSchema);
