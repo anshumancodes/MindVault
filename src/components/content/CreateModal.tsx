@@ -19,12 +19,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateContentModal } from "@/context/Context.store";
+import { useCreateContentModal,useContentFilter } from "@/context/Context.store";
 import { motion } from "framer-motion";
 
 export default function CreateModal() {
   const isOpen = useCreateContentModal((s) => s.isOpen);
   const closeModal = useCreateContentModal((s) => s.closeModal);
+  const {triggerRefresh}=useContentFilter()
 
   const [formData, setFormData] = useState({
     link: "",
@@ -67,6 +68,7 @@ export default function CreateModal() {
 
       console.log("Content created successfully:", result);
       closeModal();
+      triggerRefresh()
 
       setFormData({
         link: "",
