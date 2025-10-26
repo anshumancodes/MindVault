@@ -1,6 +1,6 @@
 "use client";
 import { Info, Link, X } from "lucide-react";
-import { useShareModal } from "@/context/Content.store";
+import { useShareModal } from "@/context/Context.store";
 
 export default function ShareModal() {
   const isOpen = useShareModal((s) => s.isOpen);

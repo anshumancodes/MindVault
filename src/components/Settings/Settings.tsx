@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useOpenSettingsModal } from "@/context/Content.store";
+import { useOpenSettingsModal } from "@/context/Context.store";
 import { X } from "lucide-react";
 
 export default function Settings() {
