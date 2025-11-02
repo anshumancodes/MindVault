@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
-
+import "@/models/tag";
+import "@/models/content";
+import "@/models/user";
 type ConnectionObject = {
   isConnected?: number;
 };
