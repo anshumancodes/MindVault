@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 export default function Sidebar() {
   const { openModal } = useUserModal();
   const { isOpen, closeSidebar } = useOpenSidebar();
-  const { data: session, status } = useSession();
+  const { data: session} = useSession();
 
   // Close sidebar when pressing Escape (wasnt nesccary byt hey)
   useEffect(() => {
@@ -21,7 +21,7 @@ export default function Sidebar() {
   const user = session?.user;
   return (
     <>
-      {/* Mobile overlay */}
+      {/* Mobile overlay  */}
       {isOpen && (
         <div
           onClick={closeSidebar}
