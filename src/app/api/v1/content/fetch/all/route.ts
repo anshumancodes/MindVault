@@ -1,11 +1,11 @@
 import { authOptions } from "@/app/api/auth/[...nextauth]/options";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import connectDB from "@/lib/connectDB";
 import UserModel from "@/models/user";
 import ContentModel from "@/models/content";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   await connectDB();
 
   try {
