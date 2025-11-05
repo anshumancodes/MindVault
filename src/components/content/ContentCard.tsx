@@ -1,7 +1,7 @@
 import { Twitter, FileText, Video, Share2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-
+import Image from "next/image";
 type Tag = { _id: string; title: string };
 
 type ContentCardProps = {
@@ -93,12 +93,16 @@ export default function ContentCard({
         {/* Description / Video */}
         {type === "videos" && thumbnail ? (
           <div className="relative w-full aspect-video max-h-[120px] rounded-lg overflow-hidden mt-2 flex-shrink-0">
-            <img
-              src={thumbnail}
-              alt={title}
-              className="object-cover w-full h-full transition-transform duration-300 hover:scale-105"
-              loading="lazy"
-            />
+            <div className="relative w-full h-full">
+              <Image
+                src={thumbnail}
+                alt={title}
+                fill
+                className="object-cover transition-transform duration-300 hover:scale-105"
+                loading="lazy"
+              />
+            </div>
+
             <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
               <div className="bg-white/20 backdrop-blur-sm rounded-full p-3">
                 <Video className="w-6 h-6 text-white" />
