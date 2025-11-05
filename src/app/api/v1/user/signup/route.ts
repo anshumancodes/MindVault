@@ -65,6 +65,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(
       {
         message: "Unexpected server error: couldnt create user!",
+        error:error
       },
       {
         status: 500,
