@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Twitter, FileText, Video, Share2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
