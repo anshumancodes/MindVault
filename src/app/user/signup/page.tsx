@@ -1,13 +1,13 @@
+"use client";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 export default function SignupPage() {
   async function signupAction(formData: FormData) {
-    "use server";
-
     const name = formData.get("name")?.toString();
     const username = formData.get("username")?.toString();
     const email = formData.get("email")?.toString();
@@ -150,6 +150,7 @@ export default function SignupPage() {
               </div>
 
               <Button
+                onClick={() => signIn("google", { callbackUrl: "/mind" })}
                 variant="outline"
                 className="w-full h-12 text-[#191516] flex items-center justify-center gap-3 font-medium rounded-lg transition-colors"
                 type="button"
@@ -182,7 +183,7 @@ export default function SignupPage() {
             <p className="text-sm text-gray-300">
               Already have an account?{" "}
               <Link
-                href="/login"
+                href="/user/login"
                 className="font-medium text-[#3057AC] hover:text-[#25447f]"
               >
                 Sign in
@@ -191,17 +192,11 @@ export default function SignupPage() {
 
             <p className="text-xs text-gray-400">
               By creating an account, you agree to our{" "}
-              <Link
-                href="/terms"
-                className="underline hover:text-[#3057AC]"
-              >
+              <Link href="/terms" className="underline hover:text-[#3057AC]">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link
-                href="/privacy"
-                className="underline hover:text-[#3057AC]"
-              >
+              <Link href="/privacy" className="underline hover:text-[#3057AC]">
                 Privacy Policy
               </Link>
             </p>
@@ -285,9 +280,7 @@ export default function SignupPage() {
                   </svg>
                 </div>
                 <div>
-                  <h3 className="font-semibold">
-                    Instant Search & Discovery
-                  </h3>
+                  <h3 className="font-semibold">Instant Search & Discovery</h3>
                   <p className="text-gray-400 text-sm">
                     Find any piece of knowledge in seconds
                   </p>
