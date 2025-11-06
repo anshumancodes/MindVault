@@ -51,6 +51,10 @@ export default function ContentCard({
       console.error("Unexpected fetch error:", error);
     }
   };
+  function extractTweetId(url: string): string | null {
+    const match = url.match(/status\/(\d+)/);
+    return match ? match[1] : null;
+  }
 
   const videoId = type === "videos" ? getYouTubeId(link) : null;
   const thumbnail = videoId
@@ -114,7 +118,24 @@ export default function ContentCard({
             {description ? (
               <p className="line-clamp-3">{description}</p>
             ) : type === "tweets" ? (
-              <p className="line-clamp-3">Click to view on Twitter</p>
+              <div className="relative w-full h-[120px] mt-2 rounded-lg overflow-hidden">
+                <iframe
+                  loading="lazy"
+                  width="100%"
+                  height="100%"
+                  src={`https://platform.twitter.com/embed/Tweet.html?frame=false&hideCard=false&hideThread=false&id=${extractTweetId(
+                    link
+                  )}&origin=${encodeURIComponent(
+                    typeof window !== "undefined" ? window.location.origin : ""
+                  )}&theme=dark&width=150px`}
+                  style={{ border: "none", height: "100%" }}
+                  frameBorder="0"
+                  scrolling="no"
+                  className="rounded-lg"
+                ></iframe>
+              </div>
+            ) : description ? (
+              <p className="line-clamp-3">{description}</p>
             ) : (
               <p className="text-gray-600 italic">No description available.</p>
             )}
