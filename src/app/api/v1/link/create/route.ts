@@ -21,11 +21,12 @@ export async function POST() {
 
     // Check if a link hash already exists for this user
     const existingLink = await LinkModel.findOne({ userId });
+    
     if (existingLink) {
       return NextResponse.json(
         {
           message: "Existing link found!",
-          shareUrl: `${process.env.NEXT_PUBLIC_APP_URL}/mind/share/${existingLink.hash}`,
+          shareUrl: `${process.env.NEXT_PUBLIC_APP_URL||"https://mindvault.anshumancdx.xyz/"}/mind/share/${existingLink.hash}`,
           link: existingLink,
         },
         { status: 200 }
@@ -41,7 +42,7 @@ export async function POST() {
         return NextResponse.json(
           {
             message: "Link hash created successfully!",
-            shareUrl: `${process.env.NEXT_PUBLIC_APP_URL}/share/${linkDoc.hash}`,
+            shareUrl: `${process.env.NEXT_PUBLIC_APP_URL||"https://mindvault.anshumancdx.xyz/"}/mind/share/${linkDoc.hash}`,
             link: linkDoc,
           },
           { status: 201 }
