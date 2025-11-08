@@ -32,7 +32,7 @@ export async function POST() {
       );
     }
 
-    // Otherwise, generate a new unique hash and create one
+    // Otherwise hgenerate a new unique hash and create one
     for (let attempt = 0; attempt < 5; attempt++) {
       try {
         const hash = crypto.randomBytes(6).toString("hex");
@@ -46,12 +46,15 @@ export async function POST() {
           },
           { status: 201 }
         );
-      } catch (err: any) {
-        if (err.code === 11000) {
-          // Duplicate hash (rare i know but edge case kind of shit so-), retry with a new one basically
-          continue;
+      } catch (err: unknown) {
+        // Duplicate hash (rare i know but edge case kind of shit so-), retry with a new one basically
+        if (
+          err instanceof Error &&
+          "code" in err &&
+          (err as any).code === 11000
+        ) {
+          continue; // duplicate hash he toh basically retry
         }
-        throw err;
       }
     }
 
@@ -59,11 +62,12 @@ export async function POST() {
       { message: "Failed to generate unique hash after multiple attempts" },
       { status: 500 }
     );
-  } catch (error: any) {
-    console.error("Error creating link hash:", error);
-    return NextResponse.json(
-      { message: "Internal server error", error: error.message },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    let message = "Internal server error";
+    if (error instanceof Error) {
+      message = error.message;
+    }
+
+    return NextResponse.json({ message, error: error }, { status: 500 });
   }
 }
