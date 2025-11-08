@@ -12,7 +12,7 @@ import {
   useCreateContentModal,
   useShareModal,
   useOpenSidebar,
-  useContentFilter
+  useContentFilter,
 } from "@/context/Context.store";
 
 export default function Actionbar() {
@@ -39,14 +39,9 @@ export default function Actionbar() {
             </div>
             <span className="text-sm font-medium text-gray-200">Vault</span>
           </div>
-
-         
           <div className="hidden md:flex items-center gap-2 px-3 py-2 bg-neutral-800 rounded-lg border border-neutral-700">
             <Funnel className="w-4 h-4 text-gray-400" />
-            <Select
-              value={filter}
-              onValueChange={(val) => setFilter(val)} 
-            >
+            <Select value={filter} onValueChange={(val) => setFilter(val)}>
               <SelectTrigger className="w-fit bg-transparent border-0 text-sm text-gray-300 focus:ring-0">
                 <SelectValue placeholder="All Content" />
               </SelectTrigger>
@@ -82,4 +77,3 @@ export default function Actionbar() {
     </header>
   );
 }
-
