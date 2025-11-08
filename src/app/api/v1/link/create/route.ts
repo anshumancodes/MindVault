@@ -47,16 +47,12 @@ export async function POST() {
           { status: 201 }
         );
       } catch (err: unknown) {
-        // Duplicate hash (rare i know but edge case kind of shit so-), retry with a new one basically
-        if (
-          err instanceof Error &&
-          "code" in err &&
-          (err as any).code === 11000
-        ) {
-          continue; // duplicate hash he toh basically retry
+        const mongoError = err as { code?: number; message?: string };
+        if (mongoError.code === 11000) {
+          continue; // if duplicate hash then the function basically  retries
         }
 
-        // Any other error while creating the link, send it to frontend
+        
         const message = err instanceof Error ? err.message : "Unknown error";
         return NextResponse.json({ message, error: err }, { status: 500 });
       }
@@ -67,7 +63,7 @@ export async function POST() {
       { status: 500 }
     );
   } catch (error: unknown) {
-    // Catch any unexpected server errors
+    
     let message = "Internal server error";
     if (error instanceof Error) {
       message = error.message;
