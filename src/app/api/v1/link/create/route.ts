@@ -32,7 +32,7 @@ export async function POST() {
       );
     }
 
-    // Otherwise hgenerate a new unique hash and create one
+    // Otherwise generate a new unique hash and create one
     for (let attempt = 0; attempt < 5; attempt++) {
       try {
         const hash = crypto.randomBytes(6).toString("hex");
@@ -55,6 +55,10 @@ export async function POST() {
         ) {
           continue; // duplicate hash he toh basically retry
         }
+
+        // Any other error while creating the link, send it to frontend
+        const message = err instanceof Error ? err.message : "Unknown error";
+        return NextResponse.json({ message, error: err }, { status: 500 });
       }
     }
 
@@ -63,11 +67,12 @@ export async function POST() {
       { status: 500 }
     );
   } catch (error: unknown) {
+    // Catch any unexpected server errors
     let message = "Internal server error";
     if (error instanceof Error) {
       message = error.message;
     }
 
-    return NextResponse.json({ message, error: error }, { status: 500 });
+    return NextResponse.json({ message, error }, { status: 500 });
   }
 }
