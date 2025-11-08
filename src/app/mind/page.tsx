@@ -42,7 +42,7 @@ export default function Mind() {
         }
 
         const data = await res.json();
-        console.log(data);
+        
         setContents(Array.isArray(data.data) ? data.data : []);
       } catch (error) {
         console.error("Unexpected fetch error:", error);
