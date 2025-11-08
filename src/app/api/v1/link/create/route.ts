@@ -25,7 +25,7 @@ export async function POST() {
       return NextResponse.json(
         {
           message: "Existing link found!",
-          shareUrl: `${process.env.NEXT_PUBLIC_APP_URL}/share/${existingLink.hash}`,
+          shareUrl: `${process.env.NEXT_PUBLIC_APP_URL}/mind/share/${existingLink.hash}`,
           link: existingLink,
         },
         { status: 200 }
