@@ -6,6 +6,9 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { NextResponse } from "next/server";
 
 export async function POST() {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_APP_URL || "https://mindvault.anshumancdx.xyz";
+
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
@@ -21,12 +24,12 @@ export async function POST() {
 
     // Check if a link hash already exists for this user
     const existingLink = await LinkModel.findOne({ userId });
-    
+
     if (existingLink) {
       return NextResponse.json(
         {
           message: "Existing link found!",
-          shareUrl: `${process.env.NEXT_PUBLIC_APP_URL||"https://mindvault.anshumancdx.xyz/"}/mind/share/${existingLink.hash}`,
+          shareUrl: `${baseUrl}/mind/share/${existingLink.hash}`,
           link: existingLink,
         },
         { status: 200 }
@@ -42,7 +45,7 @@ export async function POST() {
         return NextResponse.json(
           {
             message: "Link hash created successfully!",
-            shareUrl: `${process.env.NEXT_PUBLIC_APP_URL||"https://mindvault.anshumancdx.xyz/"}/mind/share/${linkDoc.hash}`,
+            shareUrl: `${baseUrl}/mind/share/${linkDoc.hash}`,
             link: linkDoc,
           },
           { status: 201 }
@@ -53,7 +56,6 @@ export async function POST() {
           continue; // if duplicate hash then the function basically  retries
         }
 
-        
         const message = err instanceof Error ? err.message : "Unknown error";
         return NextResponse.json({ message, error: err }, { status: 500 });
       }
@@ -64,7 +66,6 @@ export async function POST() {
       { status: 500 }
     );
   } catch (error: unknown) {
-    
     let message = "Internal server error";
     if (error instanceof Error) {
       message = error.message;
