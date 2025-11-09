@@ -11,11 +11,12 @@ import Settings from "@/components/Settings/Settings";
 import { SessionProvider } from "next-auth/react";
 import { useContentFilter } from "@/context/Context.store";
 import CardsSkeleton from "@/components/content/ContentCardSkeleton";
-
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 type Content = {
   _id: string;
   title: string;
-  link:string;
+  link: string;
   type: string;
   description?: string;
   tags?: { _id: string; title: string }[];
@@ -27,7 +28,16 @@ export default function Mind() {
   const [contents, setContents] = useState<Content[]>([]);
   const [loading, setLoading] = useState(true);
   const { filter, refreshTrigger } = useContentFilter();
+  
   // checking ki user exists or not! if not basically i will redirect them to login
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.replace("/user/login");
+    }
+  }, [status, session, router]);
+
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -42,7 +52,7 @@ export default function Mind() {
         }
 
         const data = await res.json();
-        
+
         setContents(Array.isArray(data.data) ? data.data : []);
       } catch (error) {
         console.error("Unexpected fetch error:", error);
