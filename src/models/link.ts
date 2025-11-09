@@ -5,20 +5,24 @@ export interface Link extends Document {
   userId: mongoose.Types.ObjectId;
 }
 
-const linkSchema = new Schema<Link>({
-  hash: {
-    type: String,
-    required: true,
-    unique: true,
+const linkSchema = new Schema<Link>(
+  {
+    hash: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    userId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true,
-  },
-},{
-    timestamps:true
-});
+  {
+    timestamps: true,
+  }
+);
 
-const LinkModel = mongoose.model<Link>("Link", linkSchema);
+const LinkModel =
+  mongoose.models.Link || mongoose.model<Link>("Link", linkSchema);
 export default LinkModel;
