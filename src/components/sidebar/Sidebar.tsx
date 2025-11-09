@@ -8,7 +8,7 @@ import { useSession } from "next-auth/react";
 export default function Sidebar() {
   const { openModal } = useUserModal();
   const { isOpen, closeSidebar } = useOpenSidebar();
-  const { data: session} = useSession();
+  const { data: session } = useSession();
 
   // Close sidebar when pressing Escape (wasnt nesccary byt hey)
   useEffect(() => {
@@ -87,13 +87,10 @@ export default function Sidebar() {
           <div className="flex items-center gap-3">
             <div className="bg-gray-200 text-gray-800 font-medium px-2 py-2 rounded-full flex items-center justify-center h-[40px] w-[40px]">
               {user?.name
-                ? user.name
-                    .split(" ") // Splits whatever string / full name into parts
-                    .slice(0, 2) // Take first two (e.g., first + last)
-                    .map((word) => word[0]?.toUpperCase()) // then Get first letter of each aray
-                    .join("") // Combine into initials
-                : "U"}{" "}
-                {/* default is "U" basically */}
+                ?.split(" ") // Split the full name into parts
+                .slice(0, 2) // Take first two (first + last)
+                .map((word) => word[0]?.toUpperCase()) // Get initials
+                .join("")}
             </div>
 
             <div className="flex flex-col leading-tight">
@@ -102,7 +99,6 @@ export default function Sidebar() {
             </div>
           </div>
 
-        
           <ChevronDown className="w-5 h-5 text-gray-400" />
         </div>
       </aside>
