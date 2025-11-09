@@ -2,21 +2,20 @@ import ContentModel from "@/models/content";
 import LinkModel from "@/models/link";
 import { NextRequest, NextResponse } from "next/server";
 
-export default async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const url = req.nextUrl.searchParams.get("url");
-
-    if (!url) {
-      return NextResponse.json({ error: "URL is required" }, { status: 400});
+    const body  = await req.json();
+    const {sharedHash}=body
+    if (!sharedHash) {
+      return NextResponse.json({ error: "URL is required" }, { status: 400 });
     }
 
-    const match = url.match(/\/share\/([^/]+)/);
-    const hash = match ? match[1] : null;
+    const hash = sharedHash;
 
     if (!hash) {
       return NextResponse.json(
         { error: "Invalid URL format. Missing parameter!" },
-        { status: 404}
+        { status: 404 }
       );
     }
     const user = await LinkModel.findOne({
@@ -25,7 +24,7 @@ export default async function POST(req: NextRequest) {
     if (!user) {
       return NextResponse.json(
         { error: "Invalid Shared Brain hash! No such Share brain found." },
-        { status: 404}
+        { status: 404 }
       );
     }
     const SharedBrainContent = await ContentModel.find({
@@ -44,7 +43,7 @@ export default async function POST(req: NextRequest) {
         success: true,
       },
       { status: 200 }
-    );  
+    );
   } catch (error) {
     return NextResponse.json(
       {
