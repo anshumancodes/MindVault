@@ -2,6 +2,7 @@ import { Twitter, FileText, Video, Share2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useContentFilter } from "@/context/Context.store";
 type Tag = { _id: string; title: string };
 
 type ContentCardProps = {
@@ -36,20 +37,30 @@ export default function ContentCard({
   postid,
   link,
 }: ContentCardProps) {
+  const { triggerRefresh } = useContentFilter();
   const icon = typeIconMap[type] || (
     <FileText className="w-5 h-5 text-indigo-400" />
   );
 
-  const handleDelete = async (e: React.MouseEvent) => {
+  const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
-    try {
-      await fetch("/api/v1/content/delete", {
-        method: "POST",
-        body: JSON.stringify({ contentId: postid }),
+
+    fetch("/api/v1/content/delete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contentId: postid }),
+    })
+      .then((res) => {
+        if (!res.ok) {
+          return res.text().then((err) => {
+            throw new Error(`Delete failed: ${err}`);
+          });
+        }
+      })
+      .catch((err) => {
+        console.error("Unexpected fetch error:", err);
       });
-    } catch (error) {
-      console.error("Unexpected fetch error:", error);
-    }
+    triggerRefresh();
   };
   function extractTweetId(url: string): string | null {
     const match = url.match(/status\/(\d+)/);
