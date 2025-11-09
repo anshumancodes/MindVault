@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import "@/models/tag";
 import "@/models/content";
 import "@/models/user";
+import "@/models/link"
 type ConnectionObject = {
   isConnected?: number;
 };
