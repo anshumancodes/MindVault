@@ -19,13 +19,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateContentModal,useContentFilter } from "@/context/Context.store";
+import {
+  useCreateContentModal,
+  useContentFilter,
+} from "@/context/Context.store";
 import { motion } from "framer-motion";
 
 export default function CreateModal() {
   const isOpen = useCreateContentModal((s) => s.isOpen);
   const closeModal = useCreateContentModal((s) => s.closeModal);
-  const {triggerRefresh}=useContentFilter()
+  const { triggerRefresh } = useContentFilter();
 
   const [formData, setFormData] = useState({
     link: "",
@@ -66,9 +69,8 @@ export default function CreateModal() {
         return;
       }
 
-      console.log("Content created successfully:", result);
       closeModal();
-      triggerRefresh()
+      triggerRefresh();
 
       setFormData({
         link: "",
@@ -125,7 +127,7 @@ export default function CreateModal() {
                 placeholder="Content title"
                 value={formData.title}
                 onChange={(e) => handleChange("title", e.target.value)}
-                required
+                required={formData.type !== "text"}
                 className="bg-zinc-800 border-zinc-700 text-gray-200 placeholder:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
@@ -142,6 +144,7 @@ export default function CreateModal() {
                   <SelectValue placeholder="Select type" />
                 </SelectTrigger>
                 <SelectContent className="bg-zinc-800 border-zinc-700 text-gray-200">
+                  <SelectItem value="text">text</SelectItem>
                   <SelectItem value="docs">Docs</SelectItem>
                   <SelectItem value="tweets">Tweets</SelectItem>
                   <SelectItem value="videos">Videos</SelectItem>
@@ -149,15 +152,15 @@ export default function CreateModal() {
               </Select>
             </div>
 
-            {formData.type === "docs" && (
+            {formData.type === "text" && (
               <div className="space-y-1">
                 <Label htmlFor="docContent" className="text-gray-300">
                   Document Content
                 </Label>
                 <textarea
                   id="docContent"
-                  placeholder="Write or paste your document..."
-                  maxLength={250}
+                  placeholder="Write or paste your text..."
+                  maxLength={2500}
                   value={formData.docContent}
                   onChange={(e) => handleChange("docContent", e.target.value)}
                   className="w-full min-h-[120px] rounded-md border border-zinc-700 bg-zinc-800 
