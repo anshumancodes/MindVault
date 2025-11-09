@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     }
     const SharedBrainContent = await ContentModel.find({
       owner: user.userId,
-    }).populate('owner');
+    }).populate('owner').populate('tags');
     if (!SharedBrainContent || SharedBrainContent.length === 0) {
       return NextResponse.json(
         { error: "Content Not Found for the Shared Brain!" },
