@@ -56,7 +56,7 @@ export default function SharedBrain() {
           setOwnerName(contentArray[0].owner.name);
         }
       } catch (err) {
-        setError("Something went wrong while loading shared brain content.");
+        setError("Something went wrong while loading shared brain content. "+err);
         setContents([]);
       } finally {
         setLoading(false);
