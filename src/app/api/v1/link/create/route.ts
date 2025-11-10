@@ -6,8 +6,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/options";
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL || "https://mindvault.anshumancdx.xyz";
+  const baseUrl ="https://mindvault.anshumancdx.xyz";
 
   try {
     const session = await getServerSession(authOptions);
