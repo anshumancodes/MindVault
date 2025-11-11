@@ -4,7 +4,6 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useUserModal } from "@/context/Context.store";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Settings, LogOut, HelpCircle, Star } from "lucide-react";
 import { useOpenSettingsModal } from "@/context/Context.store";
 import Link from "next/link";
@@ -68,7 +67,9 @@ export default function UserModal() {
         </Button>
       </div>
 
-      <Separator className="my-2" />
+      <div className=" border-gray-700 border-1 border-t">
+
+      </div>
 
       
       <div className="flex flex-col py-1">
@@ -77,7 +78,7 @@ export default function UserModal() {
         </Button>
         <Button
           variant="ghost"
-          className="justify-start gap-2 w-full text-red-500"
+          className="justify-start gap-2 w-full text-red-400"
           onClick={() => signOut({ callbackUrl: "/" })} 
         >
           <LogOut className="w-4 h-4" /> Log out
