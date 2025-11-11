@@ -13,6 +13,7 @@ import { useContentFilter } from "@/context/Context.store";
 import CardsSkeleton from "@/components/content/ContentCardSkeleton";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useRefreshVault } from "@/context/Context.store";
 type Content = {
   _id: string;
   title: string;
@@ -28,6 +29,7 @@ export default function Mind() {
   const [contents, setContents] = useState<Content[]>([]);
   const [loading, setLoading] = useState(true);
   const { filter, refreshTrigger } = useContentFilter();
+  const {refetch}=useRefreshVault()
   
   // checking ki user exists or not! if not basically i will redirect them to login
   const { data: session, status } = useSession();
@@ -63,7 +65,7 @@ export default function Mind() {
     };
 
     fetchContent();
-  }, [refreshTrigger]);
+  }, [refreshTrigger,refetch]);
 
   const filteredContents =
     filter === "all"
