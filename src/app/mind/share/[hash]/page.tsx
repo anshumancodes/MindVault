@@ -6,7 +6,7 @@ import Sidebar from "@/components/sidebar/Sidebar";
 import Actionbar from "@/components/Actionbar/Actionbar";
 import ContentCard from "@/components/content/ContentCard";
 import CardsSkeleton from "@/components/content/ContentCardSkeleton";
-
+import { useRefreshVault } from "@/context/Context.store";
 type Content = {
   _id: string;
   title: string;
@@ -24,6 +24,7 @@ export default function SharedBrain() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [ownerName, setOwnerName] = useState<string>("");
+  const {refetch}=useRefreshVault()
   useEffect(() => {
     const fetchSharedContent = async () => {
       if (!hash) {
@@ -64,7 +65,7 @@ export default function SharedBrain() {
     };
 
     fetchSharedContent();
-  }, [hash]);
+  }, [hash,refetch]);
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-black/40">
