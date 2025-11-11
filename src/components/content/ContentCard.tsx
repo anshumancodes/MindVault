@@ -2,7 +2,7 @@ import { Twitter, FileText, Video, Share2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { useContentFilter } from "@/context/Context.store";
+import { useContentFilter, useRefreshVault } from "@/context/Context.store";
 type Tag = { _id: string; title: string };
 
 type ContentCardProps = {
@@ -41,6 +41,7 @@ export default function ContentCard({
   const icon = typeIconMap[type] || (
     <FileText className="w-5 h-5 text-indigo-400" />
   );
+  const { refreshTrigger } = useRefreshVault();
 
   const handleDelete = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -56,11 +57,12 @@ export default function ContentCard({
             throw new Error(`Delete failed: ${err}`);
           });
         }
+        refreshTrigger()
       })
+
       .catch((err) => {
         console.error("Unexpected fetch error:", err);
       });
-    triggerRefresh();
   };
   function extractTweetId(url: string): string | null {
     const match = url.match(/status\/(\d+)/);
