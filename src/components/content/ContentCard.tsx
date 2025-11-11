@@ -2,7 +2,7 @@ import { Twitter, FileText, Video, Share2, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { useContentFilter, useRefreshVault } from "@/context/Context.store";
+import {useRefreshVault } from "@/context/Context.store";
 type Tag = { _id: string; title: string };
 
 type ContentCardProps = {
@@ -37,7 +37,7 @@ export default function ContentCard({
   postid,
   link,
 }: ContentCardProps) {
-  const { triggerRefresh } = useContentFilter();
+  
   const icon = typeIconMap[type] || (
     <FileText className="w-5 h-5 text-indigo-400" />
   );
