@@ -90,8 +90,8 @@ export default function ShareModal() {
           </p>
 
           {error ? (
-            <p className="text-red-400 text-sm">
-              Error generating link — please try again.
+            <p className="text-red-300 text-sm">
+              Error generating link , please try again!.
             </p>
           ) : loading ? (
             <p className="text-gray-400 text-sm">Generating share link...</p>
