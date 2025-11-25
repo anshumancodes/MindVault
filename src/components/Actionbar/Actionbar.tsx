@@ -54,7 +54,10 @@ export default function Actionbar() {
             </Select>
           </div>
         </div>
-
+        <div>
+          <input type="search" name="" id="" className=" hidden md:flex px-4 py-3 bg-neutral-800 rounded-lg border border-neutral-700 outline-0" placeholder="search content..." />
+          
+        </div>
         {/* Right: Action buttons */}
         <div className="flex items-center gap-2">
           <button
