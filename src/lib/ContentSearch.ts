@@ -6,10 +6,10 @@ export function useContentSearch() {
   const { data: session } = useSession();
 
   async function search(query: string) {
-    const userId = session?.user?.id;
-    if (!userId) return [];
+    const userEmail = session?.user?.email;
+    if (!userEmail) return [];
 
-    const res = await fetch(`/api/search?query=${query}&userId=${userId}`);
+    const res = await fetch(`/api/v1/search?query=${query}&user=${userEmail}`);
     return res.json();
   }
 
