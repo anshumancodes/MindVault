@@ -14,13 +14,20 @@ import {
   useOpenSidebar,
   useContentFilter,
 } from "@/context/Context.store";
+import { useContentSearch } from "@/lib/ContentSearch";
 
 export default function Actionbar() {
   const openCreateModal = useCreateContentModal((state) => state.openModal);
   const openShareModal = useShareModal((state) => state.openModal);
   const openSidebar = useOpenSidebar((state) => state.openSidebar);
   const { filter, setFilter } = useContentFilter();
-
+  const { search } = useContentSearch();
+  async function handleSearch(e:React.ChangeEvent<HTMLInputElement>) {
+    const query = e.target.value;
+    if (!query.trim()) return;
+    const results = await search(query);
+    console.log(results);
+  }
   return (
     <header className="bg-neutral-900 border-b border-neutral-800 p-4">
       <div className="flex items-center justify-between gap-4">
@@ -55,8 +62,14 @@ export default function Actionbar() {
           </div>
         </div>
         <div>
-          <input type="search" name="" id="" className=" hidden md:flex px-4 py-3 bg-neutral-800 rounded-lg border border-neutral-700 outline-0" placeholder="search content..." />
-          
+          <input
+            type="search"
+            name="search"
+            id=""
+            className=" hidden md:flex px-4 py-3 bg-neutral-800 rounded-lg border border-neutral-700 outline-0"
+            placeholder="search content..."
+            onChange={handleSearch}
+          />
         </div>
         {/* Right: Action buttons */}
         <div className="flex items-center gap-2">
