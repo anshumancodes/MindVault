@@ -1,6 +1,6 @@
 "use client";
 
-import {  X } from "lucide-react";
+import { X } from "lucide-react";
 import { useUserModal, useOpenSidebar } from "@/context/Context.store";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -9,8 +9,9 @@ export default function Sidebar() {
   const { openModal } = useUserModal();
   const { isOpen, closeSidebar } = useOpenSidebar();
   const { data: session, status } = useSession();
+  const user = session?.user;
 
-  // Close sidebar when pressing Escape (wasnt nesccary byt hey)
+  // Close sidebar on Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") closeSidebar();
@@ -18,18 +19,18 @@ export default function Sidebar() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [closeSidebar]);
-  const user = session?.user;
+
   return (
     <>
-      {/* Mobile overlay  */}
+      {/* Mobile overlay */}
       {isOpen && (
         <div
           onClick={closeSidebar}
-          className="fixed inset-0 bg-black/40 z-40 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 md:hidden"
         />
       )}
 
-      {/* Sidebar panel */}
+      {/* Sidebar */}
       <aside
         className={`
           fixed md:static top-0 left-0 z-50
@@ -40,7 +41,7 @@ export default function Sidebar() {
           ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        {/* Close Button (mobile only) */}
+        {/* Close button (mobile) */}
         <button
           onClick={closeSidebar}
           className="absolute top-4 right-4 text-gray-400 hover:text-white md:hidden"
@@ -48,9 +49,9 @@ export default function Sidebar() {
           <X className="w-6 h-6" />
         </button>
 
-        {/* Top Branding */}
-        <div className="flex items-center justify-start gap-3">
-          <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+        {/* Branding */}
+        <div className="flex items-center gap-3">
+          <div className="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center">
             <svg
               className="w-5 h-5 text-white"
               fill="none"
@@ -65,44 +66,63 @@ export default function Sidebar() {
               />
             </svg>
           </div>
-          <h1 className="text-xl font-bold text-white">MindVault</h1>
+
+          <h1 className="text-xl font-semibold text-white tracking-wide">
+            MindVault
+          </h1>
         </div>
 
         {/* Navigation */}
-        <nav className="flex flex-col gap-4 px-2 mt-10 text-gray-300">
-          <button className="text-left hover:text-white transition">
+        <nav className="flex flex-col gap-3 px-2 mt-10 text-gray-300">
+          <button className="text-left hover:text-white transition-colors">
             Vault
           </button>
-          <button className="text-left hover:text-white transition">
+
+          <button className="text-left hover:text-white transition-colors">
             Brainboard
           </button>
+
+          {/* Distinct AI Button */}
+          {/* <button
+            className="
+              mt-2 text-left
+               bg-blue-400/70
+              text-white font-medium
+              py-2 px-3 mr-20 rounded-lg
+              hover:opacity-90 active:scale-[0.98]
+              transition-all shadow-lg shadow-blue-800/20
+            "
+          >
+            MindVault AI
+          </button> */}
         </nav>
 
-        {/* Profile Section */}
+        {/* Profile */}
         <div
           onClick={openModal}
-          className="mt-auto border-t border-neutral-800 px-2 py-3 flex items-center justify-between cursor-pointer hover:bg-neutral-800 transition rounded-lg"
+          className="
+            mt-auto px-2 py-3
+            border-t border-neutral-800
+            flex items-center justify-between
+            cursor-pointer 
+            hover:bg-neutral-800/60 transition rounded-lg
+          "
         >
-          {/* Avatar + Info */}
-          <div className="flex items-center gap-2">
-            <div className="bg-gray-200 text-gray-800 font-medium px-3 py-2 rounded-full flex items-center justify-center h-[30px] w-[30px]">
+          <div className="flex items-center gap-3">
+            <div className="bg-neutral-200 text-neutral-900 font-medium px-3 py-2 rounded-full h-[32px] w-[32px] flex items-center justify-center text-sm">
               {user?.name
-                ?.split(" ") // Split the full name into parts
-                .slice(0, 2) // Take first two (first + last)
-                .map((word) => word[0]?.toUpperCase()) // Get initials
-                .join("")}
+                ?.split(" ")
+                .slice(0, 2)
+                .map((word) => word[0]?.toUpperCase())
+                .join("") || "?"}
             </div>
 
-            <div className="flex flex-col leading-tight">
+            <div className="flex flex-col">
               {status === "unauthenticated" ? (
-                <div>
-                  <p className="text-base text-white">
-                    Login to access your Vault
-                  </p>
-                </div>
+                <p className="text-sm text-white">Login to access your Vault</p>
               ) : (
                 <>
-                  <p className="text-sm text-white">{user?.name}</p>
+                  <p className="text-sm font-medium text-white">{user?.name}</p>
                   <p className="text-xs text-gray-400">{user?.email}</p>
                 </>
               )}
