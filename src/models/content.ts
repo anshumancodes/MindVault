@@ -36,6 +36,7 @@ const ContentSchema = new Schema<Content>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
+      index:true
     },
     embedding: {
       type: [Number],
