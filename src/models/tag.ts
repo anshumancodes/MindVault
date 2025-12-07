@@ -10,7 +10,7 @@ const TagSchema = new Schema<Tag>({
     required: true,
     unique: true,
     trim: true,
-    maxlength: 12
+    maxlength: 10
   }
 });
 
