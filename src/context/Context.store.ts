@@ -85,3 +85,48 @@ export const useRefreshVault = create<refreshVaultContentlist>((set) => ({
     setTimeout(() => set({ refetch: false }), 0);
   },
 }));
+interface SearchResult {
+  _id: string;
+  link?: string;
+  description?: string;
+  type: string;
+  title: string;
+  tags?: string[];
+  owner: string;
+  createdAt: string;
+  updatedAt: string;
+  score: number;
+}
+interface SearchResultsState {
+  search: boolean;
+  searchResult: SearchResult[];
+  performedSearch: () => void;
+  setSearchResult: (results: SearchResult[]) => void;
+  clearSearch: () => void;
+  resetSearch: () => void;
+}
+
+export const useSearchState = create<SearchResultsState>((set) => ({
+  search: false,
+  searchResult: [],
+
+  // Mark that a search has been performed
+  performedSearch: () => set({ search: true }),
+
+  // Update search results
+  setSearchResult: (results) =>
+    set({
+      searchResult: results,
+      search: true,
+    }),
+
+  // Clear results but keep search state
+  clearSearch: () => set({ searchResult: [] }),
+
+  // Reset everything to initial state
+  resetSearch: () =>
+    set({
+      search: false,
+      searchResult: [],
+    }),
+}));
