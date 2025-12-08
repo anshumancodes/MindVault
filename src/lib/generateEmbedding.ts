@@ -3,7 +3,7 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_DEV });
 async function generateEmbedding(text: string): Promise<number[]> {
   const res = await ai.models.embedContent({
     model: "gemini-embedding-001",
-    contents: [text],
+    contents: text,
     config: {
       outputDimensionality: 768,
     },
@@ -14,7 +14,6 @@ async function generateEmbedding(text: string): Promise<number[]> {
   if (!embedding) {
     throw new Error("Failed to generate embedding");
   }
-
   return Array.from(embedding);
 }
 
