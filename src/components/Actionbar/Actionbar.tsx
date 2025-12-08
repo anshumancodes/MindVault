@@ -1,5 +1,6 @@
 "use client";
-import { Menu, Funnel, Plus, Share2, Brain } from "lucide-react";
+import { Menu, Funnel, Plus, Share2, Brain, Search } from "lucide-react";
+import { useState, useRef } from "react";
 import {
   Select,
   SelectContent,
@@ -15,19 +16,29 @@ import {
   useContentFilter,
 } from "@/context/Context.store";
 import { useContentSearch } from "@/lib/ContentSearch";
-
+interface SearchResult {
+  _id: string;
+  title: string;
+  type: string;
+  score: number;
+}
 export default function Actionbar() {
   const openCreateModal = useCreateContentModal((state) => state.openModal);
   const openShareModal = useShareModal((state) => state.openModal);
   const openSidebar = useOpenSidebar((state) => state.openSidebar);
+  const [results, setResults] = useState<SearchResult[] | null>(null);
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
   const { filter, setFilter } = useContentFilter();
   const { search } = useContentSearch();
-  async function handleSearch(e:React.ChangeEvent<HTMLInputElement>) {
-    const query = e.target.value;
-    if (!query.trim()) return;
+
+  async function handleSearch() {
+    const query = inputRef.current?.value || "";
     const results = await search(query);
+    setResults(results);
     console.log(results);
   }
+
   return (
     <header className="bg-neutral-900 border-b border-neutral-800 p-4">
       <div className="flex items-center justify-between gap-4">
@@ -61,16 +72,18 @@ export default function Actionbar() {
             </Select>
           </div>
         </div>
-        <div>
+        <div className="hidden md:flex px-4 py-3 bg-neutral-800 rounded-lg border border-neutral-700 outline-0">
           <input
+            ref={inputRef}
             type="search"
-            name="search"
-            id=""
-            className=" hidden md:flex px-4 py-3 bg-neutral-800 rounded-lg border border-neutral-700 outline-0"
+            className="outline-none bg-transparent"
             placeholder="search content..."
-            onChange={handleSearch}
           />
+          <button type="button" onClick={handleSearch}>
+            <Search className="ml-2 text-gray-400" />
+          </button>
         </div>
+
         {/* Right: Action buttons */}
         <div className="flex items-center gap-2">
           <button
