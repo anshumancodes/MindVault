@@ -1,8 +1,10 @@
-import { NextAuthOptions } from "next-auth";
+import { NextAuthOptions, Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import { JWT } from "next-auth/jwt";
 import connectDB from "@/lib/connectDB";
 import UserModel from "@/models/user";
-import CredentialsProvider from "next-auth/providers/credentials";
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -20,7 +22,6 @@ export const authOptions: NextAuthOptions = {
 
         await connectDB();
 
-        // Find user by email or username
         const user = await UserModel.findOne({
           $or: [
             { email: credentials.emailOrUsername },
@@ -28,15 +29,10 @@ export const authOptions: NextAuthOptions = {
           ],
         });
 
-        if (!user) {
-          throw new Error("No user found with this email/username");
-        }
+        if (!user) throw new Error("No user found with this email/username");
 
-        // Verify password
         const isValid = await user.comparePassword(credentials.password);
-        if (!isValid) {
-          throw new Error("Invalid password");
-        }
+        if (!isValid) throw new Error("Invalid password");
 
         return {
           id: user._id.toString(),
@@ -59,16 +55,19 @@ export const authOptions: NextAuthOptions = {
       },
     }),
   ],
+
   pages: {
     signIn: "/user/login",
   },
+
   callbacks: {
+    /** ------------------------- SIGN IN ------------------------- **/
     async signIn({ user, account }) {
       await connectDB();
+
       const existingUser = await UserModel.findOne({ email: user.email });
 
       if (!existingUser) {
-        // Generate username from Google name
         let generatedUsername =
           user.name?.trim().replace(/\s+/g, "").toLowerCase() || "user";
 
@@ -76,6 +75,7 @@ export const authOptions: NextAuthOptions = {
 
         let finalUsername = generatedUsername;
         let counter = 1;
+
         while (await UserModel.findOne({ username: finalUsername })) {
           finalUsername = `${generatedUsername.slice(
             0,
@@ -83,6 +83,7 @@ export const authOptions: NextAuthOptions = {
           )}${counter}`;
           counter++;
         }
+
         await UserModel.create({
           username: finalUsername,
           name: user.name,
@@ -91,8 +92,26 @@ export const authOptions: NextAuthOptions = {
           provider: account?.provider,
         });
       }
+
       return true;
     },
-   
+
+    /** ------------------------- JWT ------------------------- **/
+    async jwt({ token, user }: { token: JWT; user?: User }) {
+      if (user) {
+        token.id = (user as any).id;
+        token.provider = (user as any).provider ?? null;
+      }
+      return token;
+    },
+
+    /** ------------------------- SESSION ------------------------- **/
+    async session({ session, token }: { session: Session; token: JWT }) {
+      if (session.user) {
+        session.user.id = token.id as string;
+        session.user.provider = token.provider as string;
+      }
+      return session;
+    },
   },
 };
