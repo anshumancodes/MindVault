@@ -7,10 +7,7 @@ interface SearchResult {
   _id: string;
   title: string;
   type: string;
-  description?: string;
-  link?: string;
   score: number;
-  createdAt: string;
 }
 
 interface SearchResponse {
@@ -24,11 +21,11 @@ export function useContentSearch() {
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  //  to memoize the search function basically
   const search = useCallback(
     async (query: string): Promise<SearchResult[]> => {
       setError(null);
 
+      // Check authentication status
       if (status === "unauthenticated") {
         setError("You must be logged in to search");
         return [];
@@ -69,17 +66,21 @@ export function useContentSearch() {
           try {
             const errorData = await res.json();
             errorMessage = errorData.error || errorMessage;
-          } catch {}
+          } catch {
+            // Ignore JSON parse errors
+          }
           throw new Error(errorMessage);
         }
 
-        // Parse JSON response
-        const data: SearchResponse = await res.json();
+        // Parse response - API returns array directly
+        const data: SearchResult[] = await res.json();
+        
+        console.log("Search results:", data);
 
-        //  results array or empty array if none or if yk empty data comes
-        return data.results || [];
+        // Return results array
+        return Array.isArray(data) ? data : [];
+        
       } catch (err) {
-        // error handling , if search fails basically
         const errorMessage =
           err instanceof Error
             ? err.message
@@ -88,17 +89,15 @@ export function useContentSearch() {
         setError(errorMessage);
         console.error("Search error:", err);
 
-        //returns empty array on error
         return [];
       } finally {
-        // well i reset loading state
         setIsSearching(false);
       }
     },
     [status]
   );
 
-  // Clears error manually if needed
+  // Clear error manually
   const clearError = useCallback(() => setError(null), []);
 
   return {
