@@ -13,7 +13,7 @@ import { useContentFilter } from "@/context/Context.store";
 import CardsSkeleton from "@/components/content/ContentCardSkeleton";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useRefreshVault } from "@/context/Context.store";
+import { useRefreshVault, useSearchState } from "@/context/Context.store";
 type Content = {
   _id: string;
   title: string;
@@ -29,8 +29,9 @@ export default function Mind() {
   const [contents, setContents] = useState<Content[]>([]);
   const [loading, setLoading] = useState(true);
   const { filter, refreshTrigger } = useContentFilter();
-  const {refetch}=useRefreshVault()
-  
+  const { refetch } = useRefreshVault();
+  const { search, searchResult } = useSearchState();
+
   // checking ki user exists or not! if not basically i will redirect them to login
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -39,7 +40,6 @@ export default function Mind() {
       router.replace("/user/login");
     }
   }, [status, session, router]);
-
 
   useEffect(() => {
     const fetchContent = async () => {
@@ -65,13 +65,14 @@ export default function Mind() {
     };
 
     fetchContent();
-  }, [refreshTrigger,refetch]);
+  }, [refreshTrigger, refetch]);
 
   const filteredContents =
     filter === "all"
       ? contents
       : contents.filter((c) => c.type?.toLowerCase() === filter.toLowerCase());
 
+  const displayContents = search ? searchResult : filteredContents;
   return (
     <SessionProvider>
       <div className="flex flex-col md:flex-row h-screen bg-black/40">
@@ -89,8 +90,8 @@ export default function Mind() {
                 <p className="text-gray-400">
                   <CardsSkeleton />
                 </p>
-              ) : (filteredContents?.length ?? 0) > 0 ? (
-                filteredContents.map((content) => (
+              ) : (displayContents?.length ?? 0) > 0 ? (
+                displayContents.map((content) => (
                   <ContentCard
                     key={content._id}
                     title={content.title}
@@ -103,6 +104,7 @@ export default function Mind() {
                   />
                 ))
               ) : (
+                search ?  <CardsSkeleton /> :
                 <p className="text-gray-500">No content found.</p>
               )}
             </div>
