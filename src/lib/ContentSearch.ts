@@ -5,14 +5,8 @@ import { useState, useCallback } from "react";
 import { SearchResult } from "@/types/search";
 
 
-interface SearchResponse {
-  results: SearchResult[];
-  count: number;
-  query: string;
-}
-
 export function useContentSearch() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
