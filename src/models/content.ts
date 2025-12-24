@@ -36,7 +36,7 @@ const ContentSchema = new Schema<Content>(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
-      index:true
+      index: true,
     },
     embedding: {
       type: [Number],
@@ -54,7 +54,11 @@ ContentSchema.pre("save", async function (next) {
     this.embedding = await generateEmbedding(this.title);
     next();
   } catch (err) {
-    next(err as any);
+    if (err instanceof Error) {
+      next(err);
+    } else {
+      next(new Error("Failed to generate embedding"));
+    }
   }
 });
 
