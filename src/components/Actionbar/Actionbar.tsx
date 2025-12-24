@@ -14,31 +14,29 @@ import {
   useShareModal,
   useOpenSidebar,
   useContentFilter,
+  useSearchState
 } from "@/context/Context.store";
 import { useContentSearch } from "@/lib/ContentSearch";
-interface SearchResult {
-  _id: string;
-  title: string;
-  type: string;
-  score: number;
-}
+
 export default function Actionbar() {
   const openCreateModal = useCreateContentModal((state) => state.openModal);
   const openShareModal = useShareModal((state) => state.openModal);
   const openSidebar = useOpenSidebar((state) => state.openSidebar);
-  const [results, setResults] = useState<SearchResult[] | null>(null);
+ 
+  const {setSearchResult,performedSearch}=useSearchState()
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const { filter, setFilter } = useContentFilter();
   const { search } = useContentSearch();
 
-  async function handleSearch() {
-    const query = inputRef.current?.value || "";
-    const results = await search(query);
-    setResults(results);
-    console.log(results);
-  }
+   async function handleSearch() {
+    performedSearch()
+    const query = inputRef.current?.value?.trim();
+    if (!query) return;
 
+    const results = await search(query);
+    setSearchResult(results);
+  }
   return (
     <header className="bg-neutral-900 border-b border-neutral-800 p-4">
       <div className="flex items-center justify-between gap-4">
@@ -66,6 +64,7 @@ export default function Actionbar() {
               <SelectContent className="bg-neutral-800 border-neutral-700 text-gray-200">
                 <SelectItem value="all">All Content</SelectItem>
                 <SelectItem value="docs">Docs</SelectItem>
+                <SelectItem value="text">text</SelectItem>
                 <SelectItem value="tweets">Tweets</SelectItem>
                 <SelectItem value="videos">Videos</SelectItem>
               </SelectContent>
