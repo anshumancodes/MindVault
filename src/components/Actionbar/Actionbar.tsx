@@ -1,6 +1,6 @@
 "use client";
 import { Menu, Funnel, Plus, Share2, Brain, Search } from "lucide-react";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import {
   Select,
   SelectContent,

@@ -113,7 +113,7 @@ export default function Sidebar() {
               {user?.name
                 ?.split(" ")
                 .slice(0, 2)
-                .map((word) => word[0]?.toUpperCase())
+                .map((word: string) => word[0]?.toUpperCase())
                 .join("") || "?"}
             </div>
 

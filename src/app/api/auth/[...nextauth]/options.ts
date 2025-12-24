@@ -99,8 +99,8 @@ export const authOptions: NextAuthOptions = {
     /** ------------------------- JWT ------------------------- **/
     async jwt({ token, user }: { token: JWT; user?: User }) {
       if (user) {
-        token.id = (user as any).id;
-        token.provider = (user as any).provider ?? null;
+        token.id = user.id;
+        token.provider = user.provider ?? null;
       }
       return token;
     },
