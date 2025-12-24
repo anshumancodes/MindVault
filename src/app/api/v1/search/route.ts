@@ -32,13 +32,22 @@ export async function GET(req: Request) {
         },
       },
       {
+        $lookup: {
+          from: "tags",
+          localField: "tags",
+          foreignField: "_id",
+          as: "tags",
+        },
+      },
+      {
         $project: {
           _id: 1,
           link: 1,
           description: 1,
           type: 1,
           title: 1,
-          tags: 1,
+          "tags._id": 1,
+          "tags.title": 1,
           owner: 1,
           createdAt: 1,
           updatedAt: 1,
