@@ -1,5 +1,5 @@
 import { create } from "zustand";
-
+import { SearchResult } from "@/types/search";
 type CreateContentModalState = {
   isOpen: boolean;
   openModal: () => void;
@@ -85,18 +85,7 @@ export const useRefreshVault = create<refreshVaultContentlist>((set) => ({
     setTimeout(() => set({ refetch: false }), 0);
   },
 }));
-interface SearchResult {
-  _id: string;
-  link?: string;
-  description?: string;
-  type: string;
-  title: string;
-  tags?: string[];
-  owner: string;
-  createdAt: string;
-  updatedAt: string;
-  score: number;
-}
+
 interface SearchResultsState {
   search: boolean;
   searchResult: SearchResult[];
