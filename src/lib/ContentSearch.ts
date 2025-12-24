@@ -2,13 +2,8 @@
 
 import { useSession } from "next-auth/react";
 import { useState, useCallback } from "react";
+import { SearchResult } from "@/types/search";
 
-interface SearchResult {
-  _id: string;
-  title: string;
-  type: string;
-  score: number;
-}
 
 interface SearchResponse {
   results: SearchResult[];
