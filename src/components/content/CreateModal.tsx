@@ -24,6 +24,7 @@ import {
   useContentFilter,
 } from "@/context/Context.store";
 import { motion } from "framer-motion";
+import { toast } from "react-toastify";
 
 export default function CreateModal() {
   const isOpen = useCreateContentModal((s) => s.isOpen);
@@ -66,11 +67,13 @@ export default function CreateModal() {
 
       if (!response.ok) {
         console.error("Error creating content:", result.message);
+        toast.error(`Error: ${result.message}`);
         return;
       }
 
       closeModal();
       triggerRefresh();
+      toast.success("content added successfully");
 
       setFormData({
         link: "",
@@ -81,6 +84,7 @@ export default function CreateModal() {
       });
     } catch (error) {
       console.error("Unexpected error:", error);
+      toast.error("An unexpected error occurred");
     }
   };
 
