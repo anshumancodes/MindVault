@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import {useRefreshVault } from "@/context/Context.store";
+import { toast } from "react-toastify";
 type Tag = { _id: string; title: string };
 
 type ContentCardProps = {
@@ -58,10 +59,12 @@ export default function ContentCard({
           });
         }
         refreshTrigger()
+        toast.success("content removed from brain successfully");
       })
 
       .catch((err) => {
         console.error("Unexpected fetch error:", err);
+        toast.error("Failed to remove content");
       });
   };
   function extractTweetId(url: string): string | null {
