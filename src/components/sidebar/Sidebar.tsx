@@ -4,12 +4,19 @@ import { X } from "lucide-react";
 import { useUserModal, useOpenSidebar } from "@/context/Context.store";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { toast } from "react-toastify";
 
 export default function Sidebar() {
   const { openModal } = useUserModal();
   const { isOpen, closeSidebar } = useOpenSidebar();
   const { data: session, status } = useSession();
   const user = session?.user;
+
+  const handleBrainboardClick = () => {
+    toast.warn("feature in progress", {
+      style: { backgroundColor: "#facc15", color: "#000" },
+    });
+  };
 
   // Close sidebar on Escape
   useEffect(() => {
@@ -78,7 +85,10 @@ export default function Sidebar() {
             Vault
           </button>
 
-          <button className="text-left hover:text-white transition-colors">
+          <button
+            onClick={handleBrainboardClick}
+            className="text-left hover:text-white transition-colors"
+          >
             Brainboard
           </button>
 
