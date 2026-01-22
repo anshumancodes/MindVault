@@ -24,6 +24,7 @@ export async function GET() {
 
     // fetch all content by owner ID
     const contents = await ContentModel.find({ owner: owner._id })
+      .select("-embedding")
       .populate("tags", "title")
       .sort({ createdAt: -1 });
 
