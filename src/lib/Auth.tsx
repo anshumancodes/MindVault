@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import CardsSkeleton from "@/components/content/ContentCardSkeleton";
 
 interface AuthWrapperProps {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ const AuthWrapper = ({ children }: AuthWrapperProps) => {
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p>Loading...</p>
+      <CardsSkeleton/>
       </div>
     );
   }
