@@ -7,24 +7,16 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
-import { useEffect } from "react";
 export default function LoginPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { data: session, status } = useSession();
 
-  useEffect(() => {
-    if (status === "authenticated" && session?.user) {
-      router.replace("/mind");
-    }
-  }, [status, session, router]);
   async function loginAction(formData: FormData) {
     setLoading(true);
     setError(null);
 
-    const identifier = formData.get("email")?.toString();
+    const identifier = formData.get("identifier")?.toString();
     const password = formData.get("password")?.toString();
     if (!identifier || !password) return;
 
@@ -87,7 +79,7 @@ export default function LoginPage() {
                 </Label>
                 <Input
                   id="email"
-                  name="email"
+                  name="identifier"
                   type="text"
                   placeholder="Enter your email or username"
                   className="h-12 px-4 border-[#3057AC] focus:border-[#399E5A] focus:ring-[#399E5A] bg-transparent text-[#FFF8F0] placeholder-[#FFF8F0]/50"
