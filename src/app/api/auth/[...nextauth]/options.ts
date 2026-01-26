@@ -61,7 +61,7 @@ export const authOptions: NextAuthOptions = {
   },
 
   callbacks: {
-    /** ------------------------- SIGN IN ------------------------- **/
+    //SIGN IN 
     async signIn({ user, account }) {
       await connectDB();
 
@@ -79,7 +79,7 @@ export const authOptions: NextAuthOptions = {
         while (await UserModel.findOne({ username: finalUsername })) {
           finalUsername = `${generatedUsername.slice(
             0,
-            12 - counter.toString().length
+            12 - counter.toString().length,
           )}${counter}`;
           counter++;
         }
@@ -96,16 +96,23 @@ export const authOptions: NextAuthOptions = {
       return true;
     },
 
-    /** ------------------------- JWT ------------------------- **/
-    async jwt({ token, user }: { token: JWT; user?: User }) {
-      if (user) {
-        token.id = user.id;
-        token.provider = user.provider ?? null;
+    // JWT 
+    async jwt({ token, user }) {
+      if (user?.email) {
+        await connectDB();
+
+        const dbUser = await UserModel.findOne({ email: user.email });
+
+        if (dbUser) {
+          token.id = dbUser._id.toString();
+          token.provider = dbUser.provider;
+        }
       }
+
       return token;
     },
 
-    /** ------------------------- SESSION ------------------------- **/
+    //SESSION
     async session({ session, token }: { session: Session; token: JWT }) {
       if (session.user) {
         session.user.id = token.id as string;
