@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const contentSchema = z.object({
-  link: z.string().url().optional(),
+  link: z.union([z.string().url(), z.literal("")]).optional(),
   type: z.string().min(3, "Type must be at least 3 characters long"),
   description: z
     .string()
