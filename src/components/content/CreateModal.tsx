@@ -116,7 +116,6 @@ export default function CreateModal() {
                 placeholder="https://example.com"
                 value={formData.link}
                 onChange={(e) => handleChange("link", e.target.value)}
-                required
                 className="bg-zinc-800 border-zinc-700 text-gray-200 placeholder:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
