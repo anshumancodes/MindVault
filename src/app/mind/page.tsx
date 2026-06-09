@@ -7,6 +7,7 @@ import CreateModal from "@/components/content/CreateModal";
 import ShareModal from "@/components/Share/ShareModal";
 import Sidebar from "@/components/sidebar/Sidebar";
 import UserModal from "@/components/sidebar/UserModal";
+import TextContentModal from "@/components/content/TextContentModal";
 import Settings from "@/components/Settings/Settings";
 import { useContentFilter } from "@/context/Context.store";
 import CardsSkeleton from "@/components/content/ContentCardSkeleton";
@@ -155,6 +156,7 @@ export default function Mind() {
         <CreateModal />
         <UserModal />
         <ShareModal />
+        <TextContentModal />
         <Settings />
       </div>
     </AuthWrapper>
