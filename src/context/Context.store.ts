@@ -120,14 +120,24 @@ export const useSearchState = create<SearchResultsState>((set) => ({
     }),
 }));
 
+type TextContentPayload = {
+  title: string;
+  description?: string;
+  link?: string;
+  tags?: { _id: string; title: string }[];
+  date: string;
+};
+
 type OpenTextcontentModalState = {
   isOpen: boolean;
-  openModal: () => void;
+  content: TextContentPayload | null;
+  openModal: (content: TextContentPayload) => void;
   closeModal: () => void;
 };
 
 export const useTextcontentModal = create<OpenTextcontentModalState>((set) => ({
   isOpen: false,
-  openModal: () => set({ isOpen: true }),
-  closeModal: () => set({ isOpen: false }),
+  content: null,
+  openModal: (content) => set({ isOpen: true, content }),
+  closeModal: () => set({ isOpen: false, content: null }),
 }));
