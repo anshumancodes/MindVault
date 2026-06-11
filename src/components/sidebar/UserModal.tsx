@@ -73,9 +73,11 @@ export default function UserModal() {
 
       
       <div className="flex flex-col py-1">
-        <Button variant="ghost" className="justify-start gap-2 w-full">
-          <HelpCircle className="w-4 h-4" /> Help
-        </Button>
+        <Link href="/help" onClick={closeModal}>
+          <Button variant="ghost" className="justify-start gap-2 w-full">
+            <HelpCircle className="w-4 h-4" /> Help
+          </Button>
+        </Link>
         <Link href="/privacy-policy" onClick={closeModal}>
           <Button variant="ghost" className="justify-start gap-2 w-full">
             <Shield className="w-4 h-4" /> Privacy Policy
