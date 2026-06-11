@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { useUserModal } from "@/context/Context.store";
 import { Button } from "@/components/ui/button";
-import { Settings, LogOut, HelpCircle, Star } from "lucide-react";
+import { Settings, LogOut, HelpCircle, Star, Shield } from "lucide-react";
 import { useOpenSettingsModal } from "@/context/Context.store";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
@@ -76,6 +76,11 @@ export default function UserModal() {
         <Button variant="ghost" className="justify-start gap-2 w-full">
           <HelpCircle className="w-4 h-4" /> Help
         </Button>
+        <Link href="/privacy-policy" onClick={closeModal}>
+          <Button variant="ghost" className="justify-start gap-2 w-full">
+            <Shield className="w-4 h-4" /> Privacy Policy
+          </Button>
+        </Link>
         <Button
           variant="ghost"
           className="justify-start gap-2 w-full text-red-400"
