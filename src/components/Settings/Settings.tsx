@@ -2,9 +2,15 @@
 
 import { useState } from "react";
 import { useOpenSettingsModal } from "@/context/Context.store";
-import { X, Link2, AlertTriangle, Loader2 } from "lucide-react";
+import { X, Link2, AlertTriangle, Loader2, Palette, Check } from "lucide-react";
+import {
+  type AppTheme,
+  THEMES,
+  getSavedTheme,
+  saveTheme,
+} from "@/components/ThemeProvider";
 
-// Confirmation dialog
+// ─── Confirmation dialog ──────────────────────────────────────────────────────
 function ConfirmDialog({
   newHash,
   onConfirm,
@@ -63,9 +69,44 @@ function ConfirmDialog({
   );
 }
 
-//  Main Settings modal 
+// ─── Theme option button ──────────────────────────────────────────────────────
+function ThemeOption({
+  value,
+  label,
+  current,
+  onClick,
+}: {
+  value: AppTheme;
+  label: string;
+  current: AppTheme;
+  onClick: (t: AppTheme) => void;
+}) {
+  const isSelected = value === current;
+  return (
+    <button
+      onClick={() => onClick(value)}
+      className={`relative flex-1 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 border
+        ${
+          isSelected
+            ? "bg-[#FFF8F0]/10 border-[#FFF8F0]/30 text-[#FFF8F0] shadow-inner"
+            : "bg-neutral-800/60 border-neutral-700/50 text-neutral-400 hover:text-neutral-200 hover:bg-neutral-800"
+        }`}
+    >
+      {label}
+      {isSelected && (
+        <span className="absolute top-1 right-1">
+          <Check className="w-3 h-3 text-[#FFF8F0]/60" />
+        </span>
+      )}
+    </button>
+  );
+}
+
+// ─── Main Settings modal ──────────────────────────────────────────────────────
 export default function Settings() {
-  const [accent, setAccent] = useState("Blue");
+  const [theme, setTheme] = useState<AppTheme>(() => getSavedTheme());
+  const [themeSaved, setThemeSaved] = useState(false);
+
   const [capture, setCapture] = useState("Inbox");
   const [appLock, setAppLock] = useState(false);
 
@@ -79,7 +120,15 @@ export default function Settings() {
   const isOpen = useOpenSettingsModal((s) => s.isOpen);
   const closeModal = useOpenSettingsModal((s) => s.closeModal);
 
-  // Validate locally before opening the confirm dialog
+  // ── Theme ────────────────────────────────────────────────────────────────
+  const handleThemeChange = (newTheme: AppTheme) => {
+    setTheme(newTheme);
+    saveTheme(newTheme);
+    setThemeSaved(true);
+    setTimeout(() => setThemeSaved(false), 2000);
+  };
+
+  // ── Share link ────────────────────────────────────────────────────────────
   const handleHashSubmit = () => {
     setHashError(null);
     setHashSuccess(null);
@@ -126,7 +175,7 @@ export default function Settings() {
 
   return (
     <>
-      {/*Confirm dialog (rendered above Settings) */}
+      {/* Confirm dialog (rendered above Settings) */}
       {showConfirm && (
         <ConfirmDialog
           newHash={hashInput.trim().toLowerCase()}
@@ -138,9 +187,10 @@ export default function Settings() {
 
       {/* Settings modal */}
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div className="w-full max-w-md rounded-2xl bg-neutral-900 text-white shadow-xl border border-neutral-800 p-6">
+        <div className="w-full max-w-md rounded-2xl bg-[#1e1a1b] text-[#FFF8F0] shadow-xl border border-neutral-800 p-6 space-y-1">
+
           {/* Header */}
-          <div className="flex flex-row justify-between items-center mb-4">
+          <div className="flex flex-row justify-between items-center mb-5">
             <h2 className="text-xl font-semibold">Settings</h2>
             <button
               onClick={closeModal}
@@ -150,71 +200,92 @@ export default function Settings() {
             </button>
           </div>
 
-          {/* Theme */}
-          <div className="flex justify-between items-center py-3 border-b border-neutral-800">
-            <span>Theme</span>
-            <select className="bg-neutral-800 rounded-md px-2 py-1 text-sm">
-              <option>System</option>
-              <option>Light</option>
-              <option>Dark</option>
-            </select>
+          {/* ── Appearance section ───────────────────────────────────────────── */}
+          <div className="pb-4 border-b border-neutral-800">
+            <div className="flex items-center gap-2 mb-3">
+              <Palette className="w-4 h-4 text-neutral-400" />
+              <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                Appearance
+              </span>
+            </div>
+
+            {/* Theme picker */}
+            <div className="space-y-2">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-neutral-200">Theme</span>
+                {themeSaved && (
+                  <span className="text-xs text-emerald-400 flex items-center gap-1">
+                    <Check className="w-3 h-3" /> Saved
+                  </span>
+                )}
+              </div>
+              <div className="flex gap-2">
+                {THEMES.map((t) => (
+                  <ThemeOption
+                    key={t.value}
+                    value={t.value}
+                    label={t.label}
+                    current={theme}
+                    onClick={handleThemeChange}
+                  />
+                ))}
+              </div>
+              <p className="text-xs text-neutral-500">
+                Your preference is saved locally in your browser.
+              </p>
+            </div>
           </div>
 
-          {/* Accent Color */}
-          <div className="flex justify-between items-center py-3 border-b border-neutral-800">
-            <span>Accent color</span>
-            <select
-              value={accent}
-              onChange={(e) => setAccent(e.target.value)}
-              className="bg-neutral-800 rounded-md px-2 py-1 text-sm"
-            >
-              <option>Blue</option>
-              <option>Green</option>
-              <option>Purple</option>
-            </select>
-          </div>
+          {/* ── General section ──────────────────────────────────────────────── */}
+          <div className="pt-3 pb-4 border-b border-neutral-800 space-y-0">
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">
+                General
+              </span>
+            </div>
 
-          {/* Language */}
-          <div className="flex justify-between items-center py-3 border-b border-neutral-800">
-            <span>Language</span>
-            <select className="bg-neutral-800 rounded-md px-2 py-1 text-sm">
-              <option>Auto-detect</option>
-              <option>English</option>
-              <option>Hindi</option>
-            </select>
-          </div>
+            {/* Language */}
+            <div className="flex justify-between items-center py-3 border-b border-neutral-800/60">
+              <span className="text-sm">Language</span>
+              <select className="bg-neutral-800 rounded-md px-2 py-1 text-sm text-[#FFF8F0] border border-neutral-700 focus:outline-none">
+                <option>Auto-detect</option>
+                <option>English</option>
+                <option>Hindi</option>
+              </select>
+            </div>
 
-          {/* Default Capture Location */}
-          <div className="flex justify-between items-center py-3 border-b border-neutral-800">
-            <span>Default capture location</span>
-            <select
-              value={capture}
-              onChange={(e) => setCapture(e.target.value)}
-              className="bg-neutral-800 rounded-md px-2 py-1 text-sm"
-            >
-              <option>Inbox</option>
-              <option>Daily Notes</option>
-            </select>
-          </div>
+            {/* Default Capture Location */}
+            <div className="flex justify-between items-center py-3 border-b border-neutral-800/60">
+              <span className="text-sm">Default capture location</span>
+              <select
+                value={capture}
+                onChange={(e) => setCapture(e.target.value)}
+                className="bg-neutral-800 rounded-md px-2 py-1 text-sm text-[#FFF8F0] border border-neutral-700 focus:outline-none"
+              >
+                <option>Inbox</option>
+                <option>Daily Notes</option>
+              </select>
+            </div>
 
-          {/* App Lock */}
-          <div className="flex justify-between items-center py-3 border-b border-neutral-800">
-            <span>App lock</span>
-            <button
-              onClick={() => setAppLock(!appLock)}
-              className={`w-10 h-6 rounded-full transition relative ${
-                appLock ? "bg-blue-500" : "bg-neutral-600"
-              }`}
-            >
-              <span
-                className={`absolute top-1 left-1 w-4 h-4 rounded-full bg-white transition ${
-                  appLock ? "translate-x-4" : ""
+            {/* App Lock */}
+            <div className="flex justify-between items-center py-3">
+              <span className="text-sm">App lock</span>
+              <button
+                onClick={() => setAppLock(!appLock)}
+                className={`w-10 h-6 rounded-full transition relative ${
+                  appLock ? "bg-[#FFF8F0]/80" : "bg-neutral-600"
                 }`}
-              />
-            </button>
+              >
+                <span
+                  className={`absolute top-1 left-1 w-4 h-4 rounded-full transition-transform duration-200 ${
+                    appLock ? "translate-x-4 bg-[#191516]" : "bg-white"
+                  }`}
+                />
+              </button>
+            </div>
           </div>
 
-          {/* Share link / custom hash */}
+          {/* ── Share link / custom hash ─────────────────────────────────────── */}
           <div className="pt-4 space-y-2">
             <div className="flex items-center gap-2 text-sm font-medium text-neutral-300">
               <Link2 className="w-4 h-4" />
