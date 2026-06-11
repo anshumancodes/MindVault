@@ -120,6 +120,38 @@
     @apply bg-background text-foreground;
   }
 }
-button{
+button {
   cursor: pointer;
+}
+
+/* Default (dark) — applied by ThemeProvider via data-theme="dark" */
+[data-theme="dark"],
+html.dark {
+  --mv-bg:   #191516;
+  --mv-fg:   #FFF8F0;
+  --mv-surface: #1e1a1b;
+  --mv-border: rgba(255,248,240,0.08);
+  --mv-muted:  rgba(255,248,240,0.45);
+}
+
+/* Light theme */
+[data-theme="light"],
+html.light {
+  --mv-bg:   #F7F3EE;
+  --mv-fg:   #1A1614;
+  --mv-surface: #FFFFFF;
+  --mv-border: rgba(25,21,22,0.12);
+  --mv-muted:  rgba(25,21,22,0.50);
+
+  /* Override neutral-* utility colours for light mode */
+  --background: oklch(0.96 0.005 60);
+  --foreground: oklch(0.15 0 0);
+  --card:        oklch(1 0 0);
+  --card-foreground: oklch(0.15 0 0);
+}
+
+body {
+  background-color: var(--mv-bg, #191516);
+  color: var(--mv-fg, #FFF8F0);
+  transition: background-color 0.3s ease, color 0.2s ease;
 }
