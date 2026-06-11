@@ -3,6 +3,8 @@ import mongoose, { Schema, Document } from "mongoose";
 export interface Link extends Document {
   hash: string;
   userId: mongoose.Types.ObjectId;
+  updatedtimes: number;
+  lastUpdatedAt: Date;
 }
 
 const linkSchema = new Schema<Link>(
@@ -17,6 +19,16 @@ const linkSchema = new Schema<Link>(
       ref: "User",
       required: true,
     },
+    updatedtimes:{
+      type:Number,
+      default:0,
+      max:5
+    },
+    lastUpdatedAt:{
+      type:Date,
+      default:Date.now
+    }
+
   },
   {
     timestamps: true,
